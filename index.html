@@ -639,7 +639,7 @@
             .tab-content::-webkit-scrollbar { display: none; }
         }
 
-        /* Juz grid (with numbered circle and text) */
+        /* Juz grid (with numbered circle and ordinal text) */
         .juz-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -682,7 +682,7 @@
             color: var(--text-primary);
         }
 
-        /* Surah grid with numbered circle and text (centered) */
+        /* Surah grid with numbered circle and name (centered) */
         .surah-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -1333,12 +1333,25 @@
             }
         }
 
+        // Ordinal arrays for juz (Persian and Arabic)
+        const juzOrdinalsFa = [
+            "اول", "دوم", "سوم", "چهارم", "پنجم", "ششم", "هفتم", "هشتم", "نهم", "دهم",
+            "یازدهم", "دوازدهم", "سیزدهم", "چهاردهم", "پانزدهم", "شانزدهم", "هفدهم", "هجدهم", "نوزدهم", "بیستم",
+            "بیست‌و‌یکم", "بیست‌و‌دوم", "بیست‌و‌سوم", "بیست‌و‌چهارم", "بیست‌و‌پنجم", "بیست‌و‌ششم", "بیست‌و‌هفتم", "بیست‌و‌هشتم", "بیست‌و‌نهم", "سی‌ام"
+        ];
+        const juzOrdinalsAr = [
+            "الأول", "الثاني", "الثالث", "الرابع", "الخامس", "السادس", "السابع", "الثامن", "التاسع", "العاشر",
+            "الحادي عشر", "الثاني عشر", "الثالث عشر", "الرابع عشر", "الخامس عشر", "السادس عشر", "السابع عشر", "الثامن عشر", "التاسع عشر", "العشرون",
+            "الحادي والعشرون", "الثاني والعشرون", "الثالث والعشرون", "الرابع والعشرون", "الخامس والعشرون", "السادس والعشرون", "السابع والعشرون", "الثامن والعشرون", "التاسع والعشرون", "الثلاثون"
+        ];
+
         function setLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('quran-language', lang);
             applyTranslations();
             updateLangButtons();
             rebuildSurahGrid();
+            buildJuzGrid(); // refresh juz grid to update ordinal texts
             updateTitles();
             updateThemeModeButtons();
         }
@@ -1719,7 +1732,7 @@
             }
         });
 
-        // ================== Juz Grid (with numbered circle) ==================
+        // ================== Juz Grid (with ordinal text) ==================
         function buildJuzGrid() {
             const grid = document.getElementById('juzGrid');
             grid.innerHTML = '';
@@ -1730,10 +1743,20 @@
                 else startFile = 4 + ((i - 1) * 20);
                 const div = document.createElement('div');
                 div.className = 'juz-item';
-                div.innerHTML = `
-                    <div class="juz-num">${formatNumber(i)}</div>
-                    <div class="juz-name">${translations[currentLang].juzPrefix}${formatNumber(i)}</div>
-                `;
+                let ordinal;
+                if (currentLang === 'fa') {
+                    ordinal = juzOrdinalsFa[i-1];
+                    div.innerHTML = `
+                        <div class="juz-num">${formatNumber(i)}</div>
+                        <div class="juz-name">جزء ${ordinal}</div>
+                    `;
+                } else {
+                    ordinal = juzOrdinalsAr[i-1];
+                    div.innerHTML = `
+                        <div class="juz-num">${formatNumber(i)}</div>
+                        <div class="juz-name">الجزء ${ordinal}</div>
+                    `;
+                }
                 div.onclick = () => {
                     let target = startFile;
                     if (window.innerWidth > 768 && target % 2 === 0) target--;
