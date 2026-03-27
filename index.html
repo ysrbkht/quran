@@ -50,11 +50,12 @@
             --scrollbar-thumb: #B8860B;
             --scrollbar-track: rgba(184, 134, 11, 0.08);
             
-            /* radius variables (from second design) */
+            /* radius variables */
             --radius-sm: 12px;
             --radius-md: 20px;
             --radius-lg: 28px;
             --radius-xl: 36px;
+            --radius-btn: 14px;   /* for floating buttons */
         }
 
         /* تم زرد - شب */
@@ -228,11 +229,8 @@
         .modal-card::before, .juz-card::before, .dialog-card::before {
             border-radius: 99px;
         }
-        .juz-item, .surah-item, .delete-option, .install-btn, .close-btn, .splash-btn {
+        .delete-option, .install-btn, .close-btn, .splash-btn {
             border-radius: var(--radius-sm);
-        }
-        .float-btn {
-            border-radius: 14px;
         }
         .progress-pill {
             border-radius: 99px;
@@ -244,7 +242,7 @@
             border-radius: var(--radius-md);
         }
 
-        /* ==================== FADE IN ANIMATION (from second design) ==================== */
+        /* ==================== FADE IN ANIMATION ==================== */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -259,7 +257,7 @@
             animation: fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
         }
 
-        /* ==================== ORIGINAL GLOBAL STYLES (keep everything else) ==================== */
+        /* ==================== ORIGINAL GLOBAL STYLES ==================== */
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
@@ -274,7 +272,7 @@
             line-height: 1.5;
         }
 
-        /* floating buttons (original) */
+        /* floating buttons - reduced opacity for less prominence */
         .float-btn {
             position: fixed;
             z-index: 100;
@@ -285,35 +283,52 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border-light);
-            border-radius: 50%;
-            width: 46px;
-            height: 46px;
+            border-radius: var(--radius-btn);
+            width: 44px;
+            height: 44px;
             cursor: pointer;
             color: var(--text-secondary);
             transition: all 0.25s ease;
-            box-shadow: var(--shadow-soft);
+            box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.08);
+            opacity: 0.7;  /* less prominent */
         }
         .float-btn:hover, .float-btn:active {
             color: var(--accent);
             border-color: var(--accent);
+            background: var(--accent-soft);
             transform: translateY(-2px);
             box-shadow: var(--shadow-md), 0 0 0 4px var(--accent-soft);
+            opacity: 1;  /* full opacity on hover */
         }
         .float-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             fill: currentColor;
+            transition: transform 0.2s ease;
+        }
+        .float-btn:hover svg {
+            transform: scale(1.15);
+        }
+        .float-btn:active {
+            transform: scale(0.94);
         }
 
-        .btn-menu { top: 18px; right: 18px; }
-        .btn-settings { top: 18px; left: 18px; }
-        .btn-download { bottom: 18px; right: 18px; }
-        .btn-download.done { display: none; }
-        .btn-fullscreen { bottom: 18px; left: 18px; }
+        .btn-menu     { top: 16px; right: 16px; }
+        .btn-settings { top: 16px; left: 16px; }
+        .btn-download { bottom: 16px; right: 16px; }
+        .btn-download.done { display: none !important; }
+        .btn-fullscreen { bottom: 16px; left: 16px; }
 
         @media (max-width: 768px) {
-            .float-btn svg { width: 16px; height: 16px; }
-            .float-btn { width: 38px; height: 38px; }
+            .float-btn {
+                width: 38px;
+                height: 38px;
+                border-radius: 11px;
+            }
+            .float-btn svg {
+                width: 16px;
+                height: 16px;
+            }
             .btn-fullscreen { display: none !important; }
         }
 
@@ -624,32 +639,90 @@
             .tab-content::-webkit-scrollbar { display: none; }
         }
 
-        .juz-grid, .surah-grid {
+        /* Juz grid (with numbered circle and text) */
+        .juz-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
         }
-        .surah-grid { grid-template-columns: repeat(2, 1fr); }
-        .juz-item, .surah-item {
-            padding: 14px 8px;
+        .juz-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 12px;
             background: var(--card-bg);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-sm);
-            text-align: center;
             cursor: pointer;
-            font-family: 'Vazirmatn', sans-serif;
+            transition: all 0.2s ease;
+        }
+        .juz-item:hover {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-soft);
+        }
+        .juz-num {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-soft), rgba(0,0,0,0.05));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        .juz-name {
             font-size: 14px;
             font-weight: 500;
             color: var(--text-primary);
-            transition: all 0.2s ease;
-            line-height: 1.4;
         }
-        .juz-item:hover, .surah-item:hover {
+
+        /* Surah grid with numbered circle and text (centered) */
+        .surah-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        .surah-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .surah-item:hover {
             border-color: var(--accent);
             background: var(--accent-soft);
-            color: var(--accent);
             transform: translateY(-2px);
             box-shadow: var(--shadow-soft);
+        }
+        .surah-num {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-soft), rgba(0,0,0,0.05));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        .surah-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
         }
 
         /* download options */
@@ -883,18 +956,39 @@
             color: white;
             box-shadow: 0 4px 15px rgba(102,126,234,0.4);
         }
-        body.theme-modern .juz-item,
+        body.theme-modern .juz-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        body.theme-modern .juz-item:hover {
+            background: linear-gradient(135deg, rgba(102,126,234,0.3) 0%, rgba(118,75,162,0.3) 100%);
+            border-color: rgba(102,126,234,0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+        }
+        body.theme-modern .juz-num {
+            background: rgba(102,126,234,0.2);
+            color: #a78bfa;
+        }
+        body.theme-modern .juz-name {
+            color: white;
+        }
         body.theme-modern .surah-item {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
-            color: white;
         }
-        body.theme-modern .juz-item:hover,
         body.theme-modern .surah-item:hover {
             background: linear-gradient(135deg, rgba(102,126,234,0.3) 0%, rgba(118,75,162,0.3) 100%);
             border-color: rgba(102,126,234,0.5);
-            transform: translateY(-6px) scale(1.03);
-            box-shadow: 0 12px 30px rgba(102,126,234,0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+        }
+        body.theme-modern .surah-num {
+            background: rgba(102,126,234,0.2);
+            color: #a78bfa;
+        }
+        body.theme-modern .surah-name {
+            color: white;
         }
         body.theme-modern .setting-item {
             background: rgba(255,255,255,0.05);
@@ -949,7 +1043,7 @@
 </head>
 <body class="theme-modern">
 
-    <!-- splash overlay (unchanged) -->
+    <!-- splash overlay -->
     <div class="overlay splash-overlay active" id="splashOverlay">
         <div class="overlay-backdrop"></div>
         <div class="splash-card">
@@ -1625,7 +1719,7 @@
             }
         });
 
-        // ================== Juz/Surah Grids ==================
+        // ================== Juz Grid (with numbered circle) ==================
         function buildJuzGrid() {
             const grid = document.getElementById('juzGrid');
             grid.innerHTML = '';
@@ -1634,20 +1728,22 @@
                 if (i === 1) startFile = 3;
                 else if (i === 30) startFile = 588;
                 else startFile = 4 + ((i - 1) * 20);
-                const btn = document.createElement('button');
-                btn.className = 'juz-item';
-                btn.textContent = translations[currentLang].juzPrefix + formatNumber(i);
-                btn.onclick = () => {
+                const div = document.createElement('div');
+                div.className = 'juz-item';
+                div.innerHTML = `
+                    <div class="juz-num">${formatNumber(i)}</div>
+                    <div class="juz-name">${translations[currentLang].juzPrefix}${formatNumber(i)}</div>
+                `;
+                div.onclick = () => {
                     let target = startFile;
                     if (window.innerWidth > 768 && target % 2 === 0) target--;
                     currentFile = target;
                     updatePages();
                     closeOverlay('juzOverlay');
                 };
-                // Add fade-in animation with staggered delay
-                btn.classList.add('fade-in');
-                btn.style.animationDelay = (i * 0.02) + 's';
-                grid.appendChild(btn);
+                div.classList.add('fade-in');
+                div.style.animationDelay = (i * 0.02) + 's';
+                grid.appendChild(div);
             }
         }
 
@@ -1662,6 +1758,7 @@
             "فاتحه","بقره","آل‌عمران","نساء","مائده","انعام","اعراف","انفال","توبه","یونس","هود","یوسف","رعد","ابراهیم","حجر","نحل","اسراء","کهف","مریم","طه","انبیاء","حج","مؤمنون","نور","فرقان","شعراء","نمل","قصص","عنکبوت","روم","لقمان","سجده","احزاب","سبأ","فاطر","یس","صافات","ص","زمر","غافر","فصلت","شوری","زخرف","دخان","جاثیه","احقاف","محمد","فتح","حجرات","ق","ذاریات","طور","نجم","قمر","الرحمن","واقعه","حدید","مجادله","حشر","ممتحنه","صف","جمعه","منافقون","تغابن","طلاق","تحریم","ملک","قلم","حاقه","معارج","نوح","جن","مزمل","مدثر","قیامت","انسان","مرسلات","نبأ","نازعات","عبس","تکویر","انفطار","مطففین","انشقاق","بروج","طارق","اعلی","غاشیه","فجر","بلد","شمس","لیل","ضحی","شرح","تین","علق","قدر","بینه","زلزله","عادیات","قارعه","تکاثر","عصر","همزه","فیل","قریش","ماعون","کوثر","کافرون","نصر","مسد","اخلاص","فلق","ناس"
         ];
 
+        // ================== Surah Grid with numbered circles ==================
         function rebuildSurahGrid() {
             const grid = document.getElementById('surahGrid');
             grid.innerHTML = '';
@@ -1669,20 +1766,22 @@
                 const surahNumber = i + 1;
                 const file = surahFiles[i];
                 let name = (currentLang === 'fa') ? surahNamesFa[i] : surahNamesAr[i];
-                const btn = document.createElement('button');
-                btn.className = 'surah-item';
-                btn.textContent = `${surahNumber}. ${name}`;
-                btn.onclick = () => {
+                const div = document.createElement('div');
+                div.className = 'surah-item';
+                div.innerHTML = `
+                    <div class="surah-num">${formatNumber(surahNumber)}</div>
+                    <div class="surah-name">${name}</div>
+                `;
+                div.onclick = () => {
                     let target = file;
                     if (window.innerWidth > 768 && target % 2 === 0) target--;
                     currentFile = target;
                     updatePages();
                     closeOverlay('juzOverlay');
                 };
-                // Add fade-in animation with staggered delay
-                btn.classList.add('fade-in');
-                btn.style.animationDelay = (i * 0.01) + 's';
-                grid.appendChild(btn);
+                div.classList.add('fade-in');
+                div.style.animationDelay = (i * 0.01) + 's';
+                grid.appendChild(div);
             }
         }
 
