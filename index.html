@@ -1039,6 +1039,24 @@
             border: none;
             color: white;
         }
+		
+		/* تنظیمات برای لپ‌تاپ و صفحه‌های بزرگتر */
+@media (min-width: 1024px) {
+    .juz-card {
+        max-width: 680px;      /* عرض بیشتر */
+        max-height: 88vh;      /* ارتفاع بیشتر */
+        padding: 32px 28px;    /* فضای داخلی بیشتر */
+    }
+    
+    /* افزایش تعداد ستون‌ها برای نمایش بهتر */
+    .juz-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 ستون برای اجزاء */
+    }
+    
+    .surah-grid {
+        grid-template-columns: repeat(3, 1fr); /* ۳ ستون برای سوره‌ها */
+    }
+}
     </style>
 </head>
 <body class="theme-modern">
