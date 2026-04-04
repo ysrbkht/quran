@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>القرآن الكريم</title>
     <!-- PWA & manifest -->
     <link rel="manifest" href="./manifest.json?v=20250316">
@@ -23,7 +23,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* ==================== ORIGINAL THEMES ==================== */
+        /* ==================== ORIGINAL THEMES (from first file) ==================== */
         :root {
             --bg-primary: #FDF8F0;
             --bg-secondary: #FFFFFF;
@@ -49,11 +49,13 @@
             --shadow-page: 0 8px 32px rgba(80, 50, 20, 0.2);
             --scrollbar-thumb: #B8860B;
             --scrollbar-track: rgba(184, 134, 11, 0.08);
+            
+            /* radius variables */
             --radius-sm: 12px;
             --radius-md: 20px;
             --radius-lg: 28px;
             --radius-xl: 36px;
-            --radius-btn: 14px;
+            --radius-btn: 14px;   /* for floating buttons */
         }
 
         /* تم زرد - شب */
@@ -128,7 +130,7 @@
             --scrollbar-track: rgba(79, 158, 255, 0.08);
         }
 
-        /* ==================== تم مدرن ==================== */
+        /* ==================== تم مدرن (original) ==================== */
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -165,6 +167,7 @@
             --shadow-page: 0 20px 60px rgba(0, 0, 0, 0.5);
             --scrollbar-thumb: #667eea;
             --scrollbar-track: rgba(102, 126, 234, 0.1);
+            
             background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a1a2e);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -191,6 +194,7 @@
             --card-bg: rgba(15, 15, 25, 0.7);
             --scrollbar-thumb: #5a6fe0;
             --scrollbar-track: rgba(90, 111, 224, 0.1);
+            
             background: linear-gradient(-45deg, #050510, #1a1030, #0f0c1a, #08081a);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -209,7 +213,7 @@
             animation: floatParticles 20s ease-in-out infinite;
         }
 
-        /* ==================== SCROLLBAR & ROUNDED CORNERS ==================== */
+        /* ==================== REFINED SCROLLBAR & ROUNDED CORNERS ==================== */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb {
@@ -218,6 +222,7 @@
         }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
+        /* Apply rounded corners to cards, modals, etc. */
         .modal-card, .juz-card, .dialog-card, .splash-card {
             border-radius: var(--radius-xl);
         }
@@ -227,28 +232,126 @@
         .delete-option, .install-btn, .close-btn, .splash-btn {
             border-radius: var(--radius-sm);
         }
-        .progress-pill { border-radius: 99px; }
-        .page-wrapper { border-radius: var(--radius-md); }
-        .page { border-radius: var(--radius-md); }
+        .progress-pill {
+            border-radius: 99px;
+        }
+        .page-wrapper {
+            border-radius: var(--radius-md);
+        }
+        .page {
+            border-radius: var(--radius-md);
+        }
+
+        /* ==================== MOBILE OPTIMIZATIONS ==================== */
+        @media (max-width: 768px) {
+            /* Remove rounded corners on mobile for full-edge images */
+            .page-wrapper,
+            .page {
+                border-radius: 0 !important;
+            }
+            
+            /* Full-width images on mobile */
+            .page-wrapper {
+                max-width: 100% !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                background: transparent !important;
+            }
+            
+            .page {
+                width: 100vw !important;
+                height: 100vh !important;
+                object-fit: contain;
+                border-radius: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Standard gallery-like swipe behavior */
+            #swipeArea {
+                touch-action: pan-x pan-y;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Hide navigation buttons on mobile (use swipe only) */
+            .nav-btn {
+                display: none !important;
+            }
+            
+            /* Adjust container for mobile */
+            .quran-container {
+                padding: 0 !important;
+                gap: 0 !important;
+                height: 100vh !important;
+                width: 100vw !important;
+            }
+            
+            /* Hide left page wrapper on mobile (single page view) */
+            #leftWrapper {
+                display: none !important;
+            }
+            
+            /* Full screen page wrapper on mobile */
+            #rightWrapper {
+                max-width: 100% !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            /* Adjust floating buttons for mobile */
+            .float-btn {
+                width: 38px;
+                height: 38px;
+                border-radius: 11px;
+                opacity: 0.8;
+            }
+            .float-btn svg {
+                width: 16px;
+                height: 16px;
+            }
+            .btn-fullscreen { 
+                display: none !important; 
+            }
+            
+            /* Adjust grids for mobile */
+            .juz-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+            .surah-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+            
+            /* Hide scrollbar on tab content for mobile */
+            .tab-content { 
+                scrollbar-width: none; 
+                -ms-overflow-style: none; 
+            }
+            .tab-content::-webkit-scrollbar { 
+                display: none; 
+            }
+        }
 
         /* ==================== FADE IN ANIMATION ==================== */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px) scale(0.97); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
-        .fade-in { animation: fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards; }
-
-        /* ==================== PAGE FLIP ANIMATION (NEW) ==================== */
-        @keyframes pageFlip {
-            0% { transform: translateX(100%) rotateY(90deg); opacity: 0; }
-            50% { opacity: 0.8; }
-            100% { transform: translateX(0) rotateY(0); opacity: 1; }
-        }
-        .page-flip {
-            animation: pageFlip 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        .fade-in {
+            animation: fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
         }
 
-        /* ==================== GLOBAL STYLES ==================== */
+        /* ==================== ORIGINAL GLOBAL STYLES ==================== */
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
@@ -263,6 +366,7 @@
             line-height: 1.5;
         }
 
+        /* floating buttons - reduced opacity for less prominence */
         .float-btn {
             position: fixed;
             z-index: 100;
@@ -280,7 +384,7 @@
             color: var(--text-secondary);
             transition: all 0.25s ease;
             box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.08);
-            opacity: 0.7;
+            opacity: 0.7;  /* less prominent */
         }
         .float-btn:hover, .float-btn:active {
             color: var(--accent);
@@ -288,7 +392,7 @@
             background: var(--accent-soft);
             transform: translateY(-2px);
             box-shadow: var(--shadow-md), 0 0 0 4px var(--accent-soft);
-            opacity: 1;
+            opacity: 1;  /* full opacity on hover */
         }
         .float-btn svg {
             width: 18px;
@@ -296,8 +400,12 @@
             fill: currentColor;
             transition: transform 0.2s ease;
         }
-        .float-btn:hover svg { transform: scale(1.15); }
-        .float-btn:active { transform: scale(0.94); }
+        .float-btn:hover svg {
+            transform: scale(1.15);
+        }
+        .float-btn:active {
+            transform: scale(0.94);
+        }
 
         .btn-menu     { top: 16px; right: 16px; }
         .btn-settings { top: 16px; left: 16px; }
@@ -305,12 +413,7 @@
         .btn-download.done { display: none !important; }
         .btn-fullscreen { bottom: 16px; left: 16px; }
 
-        @media (max-width: 768px) {
-            .float-btn { width: 38px; height: 38px; border-radius: 11px; }
-            .float-btn svg { width: 16px; height: 16px; }
-            .btn-fullscreen { display: none !important; }
-        }
-
+        /* overlays & modals */
         .overlay {
             position: fixed;
             inset: 0;
@@ -364,6 +467,7 @@
         }
         .modal-header svg { width: 22px; height: 22px; fill: var(--accent); flex-shrink: 0; }
 
+        /* setting items (boxed for all themes) */
         .setting-item {
             background: var(--card-bg);
             border: 1px solid var(--border-light);
@@ -445,6 +549,7 @@
         @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes cardIn { from { opacity: 0; transform: translateY(16px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
+        /* custom dialog */
         .dialog-overlay {
             position: fixed;
             inset: 0;
@@ -489,6 +594,7 @@
         .dialog-btn-cancel { background: transparent; color: var(--text-muted); border-color: var(--border-light); }
         .dialog-btn-cancel:hover { background: var(--bg-tertiary); }
 
+        /* splash */
         .splash-overlay { z-index: 3000; background: var(--bg-primary); }
         .splash-overlay .overlay-backdrop { background: transparent; backdrop-filter: none; }
         .splash-card {
@@ -563,6 +669,7 @@
         .splash-link a:hover { color: var(--accent); }
         .splash-link svg { width: 15px; height: 15px; fill: currentColor; }
 
+        /* JUZ/Surah overlay */
         .juz-overlay { z-index: 2500; }
         .juz-card {
             position: relative;
@@ -608,11 +715,8 @@
             flex-grow: 1;
             padding: 4px;
         }
-        @media (max-width: 768px) {
-            .tab-content { scrollbar-width: none; -ms-overflow-style: none; }
-            .tab-content::-webkit-scrollbar { display: none; }
-        }
 
+        /* Juz grid (with numbered circle and ordinal text) */
         .juz-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -655,6 +759,7 @@
             color: var(--text-primary);
         }
 
+        /* Surah grid with numbered circle and name (centered) */
         .surah-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -697,6 +802,7 @@
             color: var(--text-primary);
         }
 
+        /* download options */
         .dl-option {
             width: 100%;
             padding: 18px;
@@ -808,7 +914,7 @@
             z-index: 150;
         }
 
-        /* ==================== MAIN CONTENT (UPDATED) ==================== */
+        /* main content */
         .main-content {
             position: relative;
             flex-grow: 1;
@@ -819,7 +925,6 @@
             width: 100%;
             overflow: hidden;
             z-index: 1;
-            touch-action: pan-x pinch-zoom;
         }
         .quran-container {
             display: flex;
@@ -844,7 +949,6 @@
             position: relative;
             transform-origin: center center;
             will-change: transform;
-            contain: layout style paint;
         }
         .page-wrapper::after {
             content: '';
@@ -864,6 +968,8 @@
             transition: filter 0.4s ease;
             user-select: none;
             -webkit-user-drag: none;
+            /* Standard gallery zoom behavior */
+            touch-action: pan-x pan-y pinch-zoom;
         }
         body.night-mode { --image-filter: invert(0.9) brightness(1.1) contrast(1.05) hue-rotate(180deg); }
         .nav-btn {
@@ -891,15 +997,8 @@
         .nav-btn svg { width: 28px; height: 28px; fill: currentColor; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
         .nav-right { right: 0; --grad-dir: left; background: linear-gradient(to left, rgba(0,0,0,0.1), transparent); }
         .nav-left { left: 0; --grad-dir: right; background: linear-gradient(to right, rgba(0,0,0,0.1), transparent); }
-        @media (max-width: 768px) {
-            .quran-container { padding: 8px; gap: 0; }
-            .page-wrapper { max-width: 100%; width: 100%; height: auto; border-radius: var(--radius-sm); }
-            .nav-btn { display: none !important; }
-            .juz-grid { grid-template-columns: repeat(2, 1fr); }
-            .surah-grid { grid-template-columns: repeat(2, 1fr); }
-        }
 
-        /* modern theme overrides */
+        /* modern theme overrides for glassmorphism (preserve original) */
         body.theme-modern .modal-card,
         body.theme-modern .juz-card,
         body.theme-modern .dialog-card {
@@ -943,7 +1042,9 @@
             background: rgba(102,126,234,0.2);
             color: #a78bfa;
         }
-        body.theme-modern .juz-name { color: white; }
+        body.theme-modern .juz-name {
+            color: white;
+        }
         body.theme-modern .surah-item {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
@@ -958,7 +1059,9 @@
             background: rgba(102,126,234,0.2);
             color: #a78bfa;
         }
-        body.theme-modern .surah-name { color: white; }
+        body.theme-modern .surah-name {
+            color: white;
+        }
         body.theme-modern .setting-item {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
@@ -1008,11 +1111,23 @@
             border: none;
             color: white;
         }
-        
+		
+		/* تنظیمات برای لپ‌تاپ و صفحه‌های بزرگتر */
         @media (min-width: 1024px) {
-            .juz-card { max-width: 680px; max-height: 88vh; padding: 32px 28px; }
-            .juz-grid { grid-template-columns: repeat(3, 1fr); }
-            .surah-grid { grid-template-columns: repeat(3, 1fr); }
+            .juz-card {
+                max-width: 680px;      /* عرض بیشتر */
+                max-height: 88vh;      /* ارتفاع بیشتر */
+                padding: 32px 28px;    /* فضای داخلی بیشتر */
+            }
+            
+            /* افزایش تعداد ستون‌ها برای نمایش بهتر */
+            .juz-grid {
+                grid-template-columns: repeat(3, 1fr); /* 3 ستون برای اجزاء */
+            }
+            
+            .surah-grid {
+                grid-template-columns: repeat(3, 1fr); /* ۳ ستون برای سوره‌ها */
+            }
         }
     </style>
 </head>
@@ -1156,6 +1271,7 @@
     <script>
         // ================== CONST & STATE ==================
         const totalFiles = 612;
+        // UPDATED high-quality URL (new repository)
         const GITHUB_BASE_HQ = 'https://raw.githubusercontent.com/ysrbkht/quran/main/images_high/';
         const GITHUB_BASE_SD = 'https://raw.githubusercontent.com/YBakhtiar/quranh/main/';
         let currentFile = 3;
@@ -1307,6 +1423,7 @@
             }
         }
 
+        // Ordinal arrays for juz (Persian and Arabic)
         const juzOrdinalsFa = [
             "اول", "دوم", "سوم", "چهارم", "پنجم", "ششم", "هفتم", "هشتم", "نهم", "دهم",
             "یازدهم", "دوازدهم", "سیزدهم", "چهاردهم", "پانزدهم", "شانزدهم", "هفدهم", "هجدهم", "نوزدهم", "بیستم",
@@ -1324,7 +1441,7 @@
             applyTranslations();
             updateLangButtons();
             rebuildSurahGrid();
-            buildJuzGrid();
+            buildJuzGrid(); // refresh juz grid to update ordinal texts
             updateTitles();
             updateThemeModeButtons();
         }
@@ -1505,10 +1622,12 @@
             const leftW = document.getElementById('leftWrapper');
 
             if (isMobile) {
+                // Mobile: single page view, full screen
                 loadPageImage('rightPage', currentFile, 'right');
                 leftW.style.display = 'none';
                 rightW.style.display = 'flex';
             } else {
+                // Desktop: two page view
                 let rightFile = (currentFile % 2 !== 0) ? currentFile : currentFile - 1;
                 let leftFile = rightFile + 1;
                 loadPageImage('rightPage', rightFile, 'right');
@@ -1525,48 +1644,70 @@
             if (window.location.protocol !== 'file:') history.replaceState(null, null, '#' + currentFile);
         }
 
-        // ================== Zoom & Pan (ENHANCED) ==================
-        let currentScale = 1;
-        let translateX = 0, translateY = 0;
-        let lastTranslateX = 0, lastTranslateY = 0;
-        let initialPinchDistance = null;
-        let isPanning = false, isDragging = false;
-        let lastTapTime = 0, hasMoved = false;
-        let velocity = 0;
-        const deceleration = 0.95;
-        const bounceThreshold = 20;
-
-        function clampTranslate(x, y, scale, rect) {
-            const scaledWidth = rect.width * scale;
-            const scaledHeight = rect.height * scale;
-            const maxX = (scaledWidth - rect.width) / 2;
-            const maxY = (scaledHeight - rect.height) / 2;
-            return {
-                x: Math.max(-maxX, Math.min(maxX, x)),
-                y: Math.max(-maxY, Math.min(maxY, y))
-            };
-        }
-
-        function resetZoom() {
-            currentScale = 1;
-            translateX = 0; translateY = 0;
-            lastTranslateX = 0; lastTranslateY = 0;
-            applyTransform(true);
-        }
-
-        function applyTransform(smooth = false) {
-            const rect = document.getElementById('quranContainer').getBoundingClientRect();
-            const clamped = clampTranslate(translateX, translateY, currentScale, rect);
-            translateX = clamped.x;
-            translateY = clamped.y;
+        // ================== Simplified Zoom for Mobile (Gallery-like) ==================
+        let mobileZoomLevel = 1; // 1 = normal, 2 = zoomed
+        const MOBILE_ZOOM_LEVELS = [1, 2];
+        
+        function toggleMobileZoom() {
+            const isMobile = window.innerWidth <= 768;
+            if (!isMobile) return;
             
-            const t = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
-            document.querySelectorAll('.page-wrapper').forEach(w => {
-                w.style.transition = smooth ? 'transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)' : 'none';
-                w.style.transform = t;
-            });
+            const img = document.getElementById('rightPage');
+            if (!img) return;
+            
+            // Toggle between zoom levels
+            mobileZoomLevel = mobileZoomLevel === 1 ? 2 : 1;
+            
+            if (mobileZoomLevel === 2) {
+                // Zoom in: scale to 2x and center
+                img.style.transform = 'scale(2)';
+                img.style.transformOrigin = 'center center';
+                img.style.transition = 'transform 0.2s ease';
+            } else {
+                // Zoom out: reset
+                img.style.transform = 'scale(1)';
+                img.style.transition = 'transform 0.2s ease';
+            }
         }
-
+        
+        // ================== Simplified Swipe Navigation for Mobile ==================
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let touchStartY = 0;
+        let touchEndY = 0;
+        const SWIPE_THRESHOLD = 50; // Minimum distance for swipe
+        
+        function handleTouchStart(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }
+        
+        function handleTouchEnd(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        }
+        
+        function handleSwipe() {
+            const isMobile = window.innerWidth <= 768;
+            if (!isMobile) return;
+            
+            const diffX = touchEndX - touchStartX;
+            const diffY = Math.abs(touchEndY - touchStartY);
+            
+            // Only handle horizontal swipes (avoid vertical scrolling interference)
+            if (Math.abs(diffX) > SWIPE_THRESHOLD && diffY < 100) {
+                if (diffX > 0) {
+                    // Swipe right: previous page
+                    prevPage();
+                } else {
+                    // Swipe left: next page
+                    nextPage();
+                }
+            }
+        }
+        
+        // ================== Standard Gallery Navigation ==================
         function nextPage() {
             let step = window.innerWidth <= 768 ? 1 : 2;
             if (currentFile + step <= totalFiles) currentFile += step;
@@ -1580,6 +1721,16 @@
             else if (currentFile > 1) currentFile--;
             else return;
             updatePages();
+        }
+        
+        function resetZoom() {
+            // Reset mobile zoom when changing pages
+            const img = document.getElementById('rightPage');
+            if (img) {
+                img.style.transform = 'scale(1)';
+                img.style.transition = 'none';
+            }
+            mobileZoomLevel = 1;
         }
 
         // ================== Storage Management ==================
@@ -1682,8 +1833,12 @@
         }
 
         // ================== Overlay Management ==================
-        function openOverlay(id) { document.getElementById(id).classList.add('active'); }
-        function closeOverlay(id) { document.getElementById(id).classList.remove('active'); }
+        function openOverlay(id) { 
+            document.getElementById(id).classList.add('active'); 
+        }
+        function closeOverlay(id) { 
+            document.getElementById(id).classList.remove('active'); 
+        }
 
         function closeActiveOverlay() {
             const overlays = ['juzOverlay', 'settingsOverlay', 'downloadOverlay'];
@@ -1701,6 +1856,7 @@
             else if (document.exitFullscreen) document.exitFullscreen();
         }
 
+        // Back button
         history.pushState(null, null, location.href);
         window.addEventListener('popstate', function() {
             if (closeActiveOverlay()) {
@@ -1715,7 +1871,7 @@
             }
         });
 
-        // ================== Juz Grid ==================
+        // ================== Juz Grid (with ordinal text) ==================
         function buildJuzGrid() {
             const grid = document.getElementById('juzGrid');
             grid.innerHTML = '';
@@ -1729,10 +1885,16 @@
                 let ordinal;
                 if (currentLang === 'fa') {
                     ordinal = juzOrdinalsFa[i-1];
-                    div.innerHTML = `<div class="juz-num">${formatNumber(i)}</div><div class="juz-name">جزء ${ordinal}</div>`;
+                    div.innerHTML = `
+                        <div class="juz-num">${formatNumber(i)}</div>
+                        <div class="juz-name">جزء ${ordinal}</div>
+                    `;
                 } else {
                     ordinal = juzOrdinalsAr[i-1];
-                    div.innerHTML = `<div class="juz-num">${formatNumber(i)}</div><div class="juz-name">الجزء ${ordinal}</div>`;
+                    div.innerHTML = `
+                        <div class="juz-num">${formatNumber(i)}</div>
+                        <div class="juz-name">الجزء ${ordinal}</div>
+                    `;
                 }
                 div.onclick = () => {
                     let target = startFile;
@@ -1758,6 +1920,7 @@
             "فاتحه","بقره","آل‌عمران","نساء","مائده","انعام","اعراف","انفال","توبه","یونس","هود","یوسف","رعد","ابراهیم","حجر","نحل","اسراء","کهف","مریم","طه","انبیاء","حج","مؤمنون","نور","فرقان","شعراء","نمل","قصص","عنکبوت","روم","لقمان","سجده","احزاب","سبأ","فاطر","یس","صافات","ص","زمر","غافر","فصلت","شوری","زخرف","دخان","جاثیه","احقاف","محمد","فتح","حجرات","ق","ذاریات","طور","نجم","قمر","الرحمن","واقعه","حدید","مجادله","حشر","ممتحنه","صف","جمعه","منافقون","تغابن","طلاق","تحریم","ملک","قلم","حاقه","معارج","نوح","جن","مزمل","مدثر","قیامت","انسان","مرسلات","نبأ","نازعات","عبس","تکویر","انفطار","مطففین","انشقاق","بروج","طارق","اعلی","غاشیه","فجر","بلد","شمس","لیل","ضحی","شرح","تین","علق","قدر","بینه","زلزله","عادیات","قارعه","تکاثر","عصر","همزه","فیل","قریش","ماعون","کوثر","کافرون","نصر","مسد","اخلاص","فلق","ناس"
         ];
 
+        // ================== Surah Grid with numbered circles ==================
         function rebuildSurahGrid() {
             const grid = document.getElementById('surahGrid');
             grid.innerHTML = '';
@@ -1767,7 +1930,10 @@
                 let name = (currentLang === 'fa') ? surahNamesFa[i] : surahNamesAr[i];
                 const div = document.createElement('div');
                 div.className = 'surah-item';
-                div.innerHTML = `<div class="surah-num">${formatNumber(surahNumber)}</div><div class="surah-name">${name}</div>`;
+                div.innerHTML = `
+                    <div class="surah-num">${formatNumber(surahNumber)}</div>
+                    <div class="surah-name">${name}</div>
+                `;
                 div.onclick = () => {
                     let target = file;
                     if (window.innerWidth > 768 && target % 2 === 0) target--;
@@ -1846,148 +2012,38 @@
             el.querySelector('.overlay-backdrop').addEventListener('click', () => closeOverlay(id));
         });
 
-        // ================== Enhanced Touch Events (NEW) ==================
+        // ================== Touch Events - Simplified for Mobile Gallery Experience ==================
         const swipeArea = document.getElementById('swipeArea');
-        let touchstartX = 0, touchstartY = 0, touchStartTime = 0;
-        let initialDistance = 0;
-        let startX = 0, startY = 0, startTime = 0;
-
-        // Touch start
-        swipeArea.addEventListener('touchstart', e => {
-            if (e.touches.length === 2) {
-                initialDistance = Math.hypot(
-                    e.touches[0].clientX - e.touches[1].clientX,
-                    e.touches[0].clientY - e.touches[1].clientY
-                );
-                isPanning = false;
-            } else if (e.touches.length === 1) {
-                isDragging = true;
-                velocity = 0;
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
-                startTime = Date.now();
-                touchstartX = e.touches[0].clientX;
-                touchstartY = e.touches[0].clientY;
-                touchStartTime = Date.now();
-                hasMoved = false;
-                if (currentScale > 1) isPanning = true;
+        const rightPage = document.getElementById('rightPage');
+        
+        // Add touch events for mobile swipe navigation
+        swipeArea.addEventListener('touchstart', handleTouchStart, { passive: true });
+        swipeArea.addEventListener('touchend', handleTouchEnd, { passive: true });
+        
+        // Double-tap to zoom on mobile (gallery-like behavior)
+        let lastTapTime = 0;
+        rightPage.addEventListener('touchend', (e) => {
+            const isMobile = window.innerWidth <= 768;
+            if (!isMobile) return;
+            
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTapTime;
+            
+            if (tapLength < 300 && tapLength > 0) {
+                // Double tap detected
+                e.preventDefault();
+                toggleMobileZoom();
+            }
+            lastTapTime = currentTime;
+        }, { passive: false });
+        
+        // Prevent default pinch-zoom behavior on mobile for better control
+        document.addEventListener('touchmove', function(event) {
+            if (window.innerWidth <= 768 && event.scale !== 1) {
+                event.preventDefault();
             }
         }, { passive: false });
 
-        // Touch move
-        swipeArea.addEventListener('touchmove', e => {
-            e.preventDefault();
-            hasMoved = true;
-            
-            if (e.touches.length === 2 && initialDistance) {
-                // Pinch zoom
-                const distance = Math.hypot(
-                    e.touches[0].clientX - e.touches[1].clientX,
-                    e.touches[0].clientY - e.touches[1].clientY
-                );
-                const scale = distance / initialDistance;
-                currentScale = Math.max(1, Math.min(4, currentScale * scale));
-                applyTransform(false);
-                initialDistance = distance;
-            } else if (e.touches.length === 1 && isDragging) {
-                const deltaX = e.touches[0].clientX - startX;
-                const deltaY = e.touches[0].clientY - startY;
-                
-                // تشخیص swipe افقی
-                if (Math.abs(deltaX) > Math.abs(deltaY) * 1.5 && currentScale <= 1.05) {
-                    // موقتاً translate برای افکت بصری
-                    translateX += deltaX * 0.3;
-                    applyTransform(false);
-                    startX = e.touches[0].clientX;
-                    velocity = deltaX / (Date.now() - startTime + 1) * 16;
-                } else if (isPanning && currentScale > 1) {
-                    // پنینگ وقتی زوم شده
-                    translateX = lastTranslateX + (e.touches[0].clientX - touchstartX);
-                    translateY = lastTranslateY + (e.touches[0].clientY - touchstartY);
-                    applyTransform(false);
-                }
-            }
-        }, { passive: false });
-
-        // Touch end
-        swipeArea.addEventListener('touchend', e => {
-            if (e.touches.length > 0) {
-                // هنوز انگشت‌هایی روی صفحه هستند
-                initialDistance = null;
-                if (e.touches.length === 1 && currentScale > 1) {
-                    touchstartX = e.touches[0].clientX;
-                    touchstartY = e.touches[0].clientY;
-                    lastTranslateX = translateX;
-                    lastTranslateY = translateY;
-                    isPanning = true;
-                }
-                return;
-            }
-            
-            isDragging = false;
-            initialDistance = null;
-            
-            if (isPanning) {
-                lastTranslateX = translateX;
-                lastTranslateY = translateY;
-                isPanning = false;
-            }
-            
-            // Double tap detection
-            if (!hasMoved) {
-                const now = Date.now();
-                if (now - lastTapTime < 300 && now - lastTapTime > 0) {
-                    currentScale = currentScale > 1.5 ? 1 : 2;
-                    applyTransform(true);
-                    lastTapTime = 0;
-                    return;
-                }
-                lastTapTime = now;
-            } else {
-                lastTapTime = 0;
-            }
-            
-            // Momentum scrolling برای ورق‌زدن
-            if (currentScale <= 1.05 && e.changedTouches.length === 1 && hasMoved) {
-                let diffX = Math.abs(e.changedTouches[0].clientX - touchstartX);
-                let diffY = Math.abs(e.changedTouches[0].clientY - touchstartY);
-                let timeDiff = Date.now() - touchStartTime;
-                
-                if (diffX > 80 && diffX > diffY * 2 && timeDiff < 600) {
-                    if (e.changedTouches[0].clientX > touchstartX) {
-                        nextPage();
-                    } else {
-                        prevPage();
-                    }
-                }
-            }
-            
-            // Decay momentum
-            const decay = () => {
-                velocity *= deceleration;
-                if (Math.abs(velocity) > 0.1) {
-                    requestAnimationFrame(decay);
-                }
-            };
-            decay();
-            
-            // بعد از swipe، ریست زوم
-            if (currentScale > 1 && !hasMoved) {
-                // فقط اگر حرکت نکرده بودیم و زوم بود، ریست نکن
-            } else if (currentScale > 1 && hasMoved && Math.abs(translateX) < 10 && Math.abs(translateY) < 10) {
-                // اگر پنینگ کوچک بود، ریست کن
-                resetZoom();
-            }
-        }, { passive: false });
-
-        // Double click for desktop
-        swipeArea.addEventListener('dblclick', e => {
-            e.preventDefault();
-            currentScale = currentScale > 1.5 ? 1 : 2;
-            applyTransform(true);
-        });
-
-        // Keyboard navigation
         document.addEventListener('keydown', e => {
             if (e.key === 'ArrowLeft') { e.preventDefault(); nextPage(); }
             if (e.key === 'ArrowRight') { e.preventDefault(); prevPage(); }
