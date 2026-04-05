@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>القرآن الكريم</title>
     <!-- PWA & manifest -->
     <link rel="manifest" href="./manifest.json?v=20250316">
@@ -267,7 +267,7 @@
             display: flex;
             height: 100vh;
             overflow: hidden;
-            touch-action: pan-y pinch-zoom; /* allow vertical scroll only, horizontal for carousel */
+            touch-action: none;
             transition: background-color 0.4s ease, color 0.4s ease;
             line-height: 1.5;
         }
@@ -918,65 +918,10 @@
         .nav-btn svg { width: 28px; height: 28px; fill: currentColor; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
         .nav-right { right: 0; --grad-dir: left; background: linear-gradient(to left, rgba(0,0,0,0.1), transparent); }
         .nav-left { left: 0; --grad-dir: right; background: linear-gradient(to right, rgba(0,0,0,0.1), transparent); }
-        
-        /* ========== MODIFIED MOBILE STYLES: NO BORDERS, NO MARGINS, GALLERY SWIPE ========== */
         @media (max-width: 768px) {
-            /* remove all spacing and rounded corners */
-            .quran-container {
-                padding: 0 !important;
-                gap: 0 !important;
-                height: 100vh !important;
-                width: 100vw !important;
-            }
-            .page-wrapper {
-                max-width: 100% !important;
-                width: 100% !important;
-                height: 100% !important;
-                border-radius: 0 !important;
-                box-shadow: none !important;
-                background: transparent;
-                margin: 0;
-                padding: 0;
-            }
-            .page {
-                border-radius: 0 !important;
-                background: var(--bg-primary);
-            }
-            /* hide desktop nav buttons */
-            .nav-btn {
-                display: none !important;
-            }
-            /* carousel track (will be created dynamically) */
-            .mobile-carousel-track {
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                height: 100%;
-                will-change: transform;
-                transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1);
-                transform: translateX(0);
-            }
-            .mobile-slide {
-                flex: 0 0 100%;
-                width: 100%;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: var(--bg-primary);
-                overflow: hidden;
-            }
-            .mobile-slide img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                pointer-events: none;
-                background: var(--bg-primary);
-            }
-            /* adjust floating buttons for fullscreen */
-            .float-btn {
-                z-index: 200;
-            }
+            .quran-container { padding: 8px; gap: 0; }
+            .page-wrapper { max-width: 100%; width: 100%; height: auto; border-radius: var(--radius-sm); }
+            .nav-btn { display: none !important; }
             .juz-grid { grid-template-columns: repeat(2, 1fr); }
             .surah-grid { grid-template-columns: repeat(2, 1fr); }
         }
@@ -1098,22 +1043,25 @@
 		/* تنظیمات برای لپ‌تاپ و صفحه‌های بزرگتر */
 @media (min-width: 1024px) {
     .juz-card {
-        max-width: 680px;
-        max-height: 88vh;
-        padding: 32px 28px;
+        max-width: 680px;      /* عرض بیشتر */
+        max-height: 88vh;      /* ارتفاع بیشتر */
+        padding: 32px 28px;    /* فضای داخلی بیشتر */
     }
+    
+    /* افزایش تعداد ستون‌ها برای نمایش بهتر */
     .juz-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, 1fr); /* 3 ستون برای اجزاء */
     }
+    
     .surah-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, 1fr); /* ۳ ستون برای سوره‌ها */
     }
 }
     </style>
 </head>
 <body class="theme-modern">
 
-    <!-- splash overlay (unchanged) -->
+    <!-- splash overlay -->
     <div class="overlay splash-overlay active" id="splashOverlay">
         <div class="overlay-backdrop"></div>
         <div class="splash-card">
@@ -1249,8 +1197,9 @@
     </div>
 
     <script>
-        // ================== CONST & STATE (unchanged) ==================
+        // ================== CONST & STATE ==================
         const totalFiles = 612;
+        // UPDATED high-quality URL (new repository)
         const GITHUB_BASE_HQ = 'https://raw.githubusercontent.com/ysrbkht/quran/main/images_high/';
         const GITHUB_BASE_SD = 'https://raw.githubusercontent.com/YBakhtiar/quranh/main/';
         let currentFile = 3;
@@ -1275,7 +1224,7 @@
             }
         });
 
-        // ================== TRANSLATIONS (unchanged) ==================
+        // ================== TRANSLATIONS ==================
         const translations = {
             fa: {
                 splashSubtitle: 'به نرم‌افزار قرآن کریم خوش آمدید',
@@ -1393,7 +1342,7 @@
             localStorage.setItem('quran-theme-mode', 'day');
         }
 
-        // ================== Helper functions (unchanged) ==================
+        // ================== Helper functions ==================
         function formatNumber(num) {
             if (currentLang === 'fa') {
                 return num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
@@ -1402,8 +1351,17 @@
             }
         }
 
-        const juzOrdinalsFa = ["اول","دوم","سوم","چهارم","پنجم","ششم","هفتم","هشتم","نهم","دهم","یازدهم","دوازدهم","سیزدهم","چهاردهم","پانزدهم","شانزدهم","هفدهم","هجدهم","نوزدهم","بیستم","بیست‌و‌یکم","بیست‌و‌دوم","بیست‌و‌سوم","بیست‌و‌چهارم","بیست‌و‌پنجم","بیست‌و‌ششم","بیست‌و‌هفتم","بیست‌و‌هشتم","بیست‌و‌نهم","سی‌ام"];
-        const juzOrdinalsAr = ["الأول","الثاني","الثالث","الرابع","الخامس","السادس","السابع","الثامن","التاسع","العاشر","الحادي عشر","الثاني عشر","الثالث عشر","الرابع عشر","الخامس عشر","السادس عشر","السابع عشر","الثامن عشر","التاسع عشر","العشرون","الحادي والعشرون","الثاني والعشرون","الثالث والعشرون","الرابع والعشرون","الخامس والعشرون","السادس والعشرون","السابع والعشرون","الثامن والعشرون","التاسع والعشرون","الثلاثون"];
+        // Ordinal arrays for juz (Persian and Arabic)
+        const juzOrdinalsFa = [
+            "اول", "دوم", "سوم", "چهارم", "پنجم", "ششم", "هفتم", "هشتم", "نهم", "دهم",
+            "یازدهم", "دوازدهم", "سیزدهم", "چهاردهم", "پانزدهم", "شانزدهم", "هفدهم", "هجدهم", "نوزدهم", "بیستم",
+            "بیست‌و‌یکم", "بیست‌و‌دوم", "بیست‌و‌سوم", "بیست‌و‌چهارم", "بیست‌و‌پنجم", "بیست‌و‌ششم", "بیست‌و‌هفتم", "بیست‌و‌هشتم", "بیست‌و‌نهم", "سی‌ام"
+        ];
+        const juzOrdinalsAr = [
+            "الأول", "الثاني", "الثالث", "الرابع", "الخامس", "السادس", "السابع", "الثامن", "التاسع", "العاشر",
+            "الحادي عشر", "الثاني عشر", "الثالث عشر", "الرابع عشر", "الخامس عشر", "السادس عشر", "السابع عشر", "الثامن عشر", "التاسع عشر", "العشرون",
+            "الحادي والعشرون", "الثاني والعشرون", "الثالث والعشرون", "الرابع والعشرون", "الخامس والعشرون", "السادس والعشرون", "السابع والعشرون", "الثامن والعشرون", "التاسع والعشرون", "الثلاثون"
+        ];
 
         function setLanguage(lang) {
             currentLang = lang;
@@ -1411,7 +1369,7 @@
             applyTranslations();
             updateLangButtons();
             rebuildSurahGrid();
-            buildJuzGrid();
+            buildJuzGrid(); // refresh juz grid to update ordinal texts
             updateTitles();
             updateThemeModeButtons();
         }
@@ -1464,7 +1422,7 @@
             document.querySelector('#themeModernBtn span').textContent = t.themeModern;
         }
 
-        // Dialog functions (unchanged)
+        // ================== Dialog ==================
         function showDialogConfirm(message, title) {
             return new Promise(function(resolve) {
                 const overlay = document.createElement('div');
@@ -1562,9 +1520,11 @@
             nightBtn.classList.toggle('active', currentThemeMode === 'night');
         }
 
-        // ================== Page Management (modified for mobile carousel) ==================
-        async function loadPageImage(imgElement, fileNumber) {
-            if (!imgElement) return;
+        // ================== Page Management ==================
+        async function loadPageImage(imgId, fileNumber, side) {
+            const img = document.getElementById(imgId);
+            if (!img) return;
+            if (objectUrls[side]) { URL.revokeObjectURL(objectUrls[side]); objectUrls[side] = null; }
             const fileName = 'Quran' + String(fileNumber).padStart(3, '0') + '.jpg';
             const urlPath = 'images/' + fileName;
             try {
@@ -1572,216 +1532,87 @@
                 const response = await cache.match(urlPath);
                 if (response) {
                     const blob = await response.blob();
-                    imgElement.src = URL.createObjectURL(blob);
+                    const objUrl = URL.createObjectURL(blob);
+                    objectUrls[side] = objUrl;
+                    img.src = objUrl;
                 } else {
-                    imgElement.src = urlPath;
+                    img.src = urlPath;
                 }
             } catch {
-                imgElement.src = urlPath;
+                img.src = urlPath;
             }
         }
 
-        // Desktop mode (two pages)
-        function updateDesktopPages() {
-            if (window.innerWidth <= 768) return;
-            let rightFile = (currentFile % 2 !== 0) ? currentFile : currentFile - 1;
-            let leftFile = rightFile + 1;
-            loadPageImage(document.getElementById('rightPage'), rightFile);
-            if (leftFile <= totalFiles) {
-                document.getElementById('leftWrapper').style.display = 'flex';
-                loadPageImage(document.getElementById('leftPage'), leftFile);
+        function updatePages() {
+            resetZoom();
+            const isMobile = window.innerWidth <= 768;
+            const rightW = document.getElementById('rightWrapper');
+            const leftW = document.getElementById('leftWrapper');
+
+            if (isMobile) {
+                loadPageImage('rightPage', currentFile, 'right');
+                leftW.style.display = 'none';
+                rightW.style.display = 'flex';
             } else {
-                document.getElementById('leftWrapper').style.display = 'none';
+                let rightFile = (currentFile % 2 !== 0) ? currentFile : currentFile - 1;
+                let leftFile = rightFile + 1;
+                loadPageImage('rightPage', rightFile, 'right');
+                if (leftFile <= totalFiles) {
+                    loadPageImage('leftPage', leftFile, 'left');
+                    leftW.style.display = 'flex';
+                } else {
+                    leftW.style.display = 'none';
+                }
+                rightW.style.display = 'flex';
+                if (currentFile % 2 === 0) currentFile = rightFile;
             }
-            document.getElementById('rightWrapper').style.display = 'flex';
-            if (currentFile % 2 === 0) currentFile = rightFile;
             localStorage.setItem('lastQuranFile', currentFile.toString());
             if (window.location.protocol !== 'file:') history.replaceState(null, null, '#' + currentFile);
         }
 
-        // Mobile carousel (gallery swipe)
-        let mobileCarouselActive = false;
-        let carouselTrack = null;
-        let mobileSlideImages = [null, null]; // two img elements
-        let startX = 0, currentTranslate = 0, startTranslate = 0;
-        let isDraggingCarousel = false;
-        let dragStartTime = 0;
+        // Zoom & pan
+        let currentScale = 1;
+        let translateX = 0, translateY = 0;
+        let lastTranslateX = 0, lastTranslateY = 0;
+        let initialPinchDistance = null;
+        let isPanning = false;
+        let lastTapTime = 0;
+        let hasMoved = false;
 
-        function initMobileCarousel() {
-            if (window.innerWidth > 768) return;
-            if (mobileCarouselActive) return;
-            mobileCarouselActive = true;
-            const container = document.getElementById('quranContainer');
-            if (!container) return;
-            // clear desktop structure
-            container.innerHTML = '';
-            container.style.padding = '0';
-            container.style.gap = '0';
-            container.style.height = '100vh';
-            container.style.width = '100vw';
-            container.style.overflow = 'hidden';
-            const track = document.createElement('div');
-            track.className = 'mobile-carousel-track';
-            const slide0 = document.createElement('div'); slide0.className = 'mobile-slide';
-            const slide1 = document.createElement('div'); slide1.className = 'mobile-slide';
-            const img0 = document.createElement('img'); img0.draggable = false; img0.style.width = '100%'; img0.style.height = '100%'; img0.style.objectFit = 'contain';
-            const img1 = document.createElement('img'); img1.draggable = false; img1.style.width = '100%'; img1.style.height = '100%'; img1.style.objectFit = 'contain';
-            slide0.appendChild(img0); slide1.appendChild(img1);
-            track.appendChild(slide0); track.appendChild(slide1);
-            container.appendChild(track);
-            carouselTrack = track;
-            mobileSlideImages = [img0, img1];
-            
-            function updateCarouselImages() {
-                loadPageImage(img0, currentFile);
-                let nextPage = currentFile + 1;
-                if (nextPage > totalFiles) nextPage = currentFile;
-                loadPageImage(img1, nextPage);
-            }
-            updateCarouselImages();
-            
-            let touchStartX = 0;
-            let dragActive = false;
-            let currentDragOffset = 0;
-            
-            function setTransform(offset, withTransition = true) {
-                if (!carouselTrack) return;
-                if (withTransition) carouselTrack.style.transition = 'transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1)';
-                else carouselTrack.style.transition = 'none';
-                carouselTrack.style.transform = `translateX(${offset}px)`;
-            }
-            
-            function resetPosition(animate = true) {
-                setTransform(0, animate);
-                currentDragOffset = 0;
-            }
-            
-            function onTouchStart(e) {
-                if (e.touches.length !== 1) return;
-                touchStartX = e.touches[0].clientX;
-                dragStartTime = Date.now();
-                dragActive = true;
-                startTranslate = currentDragOffset;
-                carouselTrack.style.transition = 'none';
-                // preload previous page into slide1 for direction awareness
-                let prevPage = currentFile - 1;
-                if (prevPage >= 1) loadPageImage(mobileSlideImages[1], prevPage);
-                else loadPageImage(mobileSlideImages[1], currentFile);
-            }
-            
-            function onTouchMove(e) {
-                if (!dragActive) return;
-                e.preventDefault();
-                let deltaX = e.touches[0].clientX - touchStartX;
-                let newOffset = startTranslate + deltaX;
-                let maxOffset = window.innerWidth * 0.8;
-                newOffset = Math.min(Math.max(newOffset, -maxOffset), maxOffset);
-                currentDragOffset = newOffset;
-                setTransform(newOffset, false);
-                // dynamically change slide1 image based on direction
-                if (newOffset > 15 && currentFile > 1) {
-                    let prevPage = currentFile - 1;
-                    if (!mobileSlideImages[1].src.includes(String(prevPage).padStart(3,'0'))) loadPageImage(mobileSlideImages[1], prevPage);
-                } else if (newOffset < -15 && currentFile < totalFiles) {
-                    let nextPage = currentFile + 1;
-                    if (!mobileSlideImages[1].src.includes(String(nextPage).padStart(3,'0'))) loadPageImage(mobileSlideImages[1], nextPage);
-                } else {
-                    let nextPage = currentFile + 1 <= totalFiles ? currentFile + 1 : currentFile;
-                    if (!mobileSlideImages[1].src.includes(String(nextPage).padStart(3,'0'))) loadPageImage(mobileSlideImages[1], nextPage);
-                }
-            }
-            
-            function onTouchEnd(e) {
-                if (!dragActive) return;
-                dragActive = false;
-                let deltaX = currentDragOffset;
-                let threshold = window.innerWidth * 0.25;
-                let shouldChange = Math.abs(deltaX) > threshold;
-                if (shouldChange) {
-                    let direction = deltaX > 0 ? 'prev' : 'next';
-                    if (direction === 'next' && currentFile < totalFiles) {
-                        currentFile++;
-                        updateCarouselImages();
-                        setTransform(0, true);
-                        setTimeout(() => { currentDragOffset = 0; }, 200);
-                    } else if (direction === 'prev' && currentFile > 1) {
-                        currentFile--;
-                        updateCarouselImages();
-                        setTransform(0, true);
-                        setTimeout(() => { currentDragOffset = 0; }, 200);
-                    } else {
-                        resetPosition(true);
-                    }
-                } else {
-                    resetPosition(true);
-                }
-                setTimeout(() => { currentDragOffset = 0; }, 250);
-                localStorage.setItem('lastQuranFile', currentFile);
-            }
-            
-            track.addEventListener('touchstart', onTouchStart, { passive: false });
-            track.addEventListener('touchmove', onTouchMove, { passive: false });
-            track.addEventListener('touchend', onTouchEnd);
-            window.updateMobileCarousel = updateCarouselImages;
+        function resetZoom() {
+            currentScale = 1;
+            translateX = 0; translateY = 0;
+            lastTranslateX = 0; lastTranslateY = 0;
+            applyTransform(true);
         }
-        
-        function goToPage(targetFile) {
-            currentFile = targetFile;
-            if (window.innerWidth <= 768) {
-                if (carouselTrack) {
-                    if (mobileSlideImages[0]) loadPageImage(mobileSlideImages[0], currentFile);
-                    let next = currentFile + 1 <= totalFiles ? currentFile + 1 : currentFile;
-                    if (mobileSlideImages[1]) loadPageImage(mobileSlideImages[1], next);
-                } else {
-                    initMobileCarousel();
+        function applyTransform(smooth) {
+            const rightW = document.getElementById('rightWrapper');
+            const leftW = document.getElementById('leftWrapper');
+            const t = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
+            [rightW, leftW].forEach(w => {
+                if (w) {
+                    w.style.transition = smooth ? 'transform 0.3s ease-out' : 'none';
+                    w.style.transform = t;
                 }
-            } else {
-                updateDesktopPages();
-            }
-            localStorage.setItem('lastQuranFile', currentFile);
+            });
         }
-        
-        function refreshDisplay() {
-            if (window.innerWidth <= 768) {
-                if (!carouselTrack) initMobileCarousel();
-                else {
-                    if (mobileSlideImages[0]) loadPageImage(mobileSlideImages[0], currentFile);
-                    let next = currentFile + 1 <= totalFiles ? currentFile + 1 : currentFile;
-                    if (mobileSlideImages[1]) loadPageImage(mobileSlideImages[1], next);
-                }
-            } else {
-                if (carouselTrack) { // switch back to desktop
-                    carouselTrack.remove();
-                    mobileCarouselActive = false;
-                    location.reload(); // simple reload to restore desktop structure
-                } else {
-                    updateDesktopPages();
-                }
-            }
-        }
-        
-        // Legacy functions kept for compatibility (not used in mobile)
-        function updatePages() { refreshDisplay(); }
-        function resetZoom() {}
-        function applyTransform() {}
+
         function nextPage() {
-            if (window.innerWidth <= 768) {
-                if (currentFile < totalFiles) goToPage(currentFile + 1);
-            } else {
-                if (currentFile + 2 <= totalFiles) goToPage(currentFile + 2);
-                else if (currentFile < totalFiles) goToPage(currentFile + 1);
-            }
+            let step = window.innerWidth <= 768 ? 1 : 2;
+            if (currentFile + step <= totalFiles) currentFile += step;
+            else if (currentFile < totalFiles) currentFile++;
+            else return;
+            updatePages();
         }
         function prevPage() {
-            if (window.innerWidth <= 768) {
-                if (currentFile > 1) goToPage(currentFile - 1);
-            } else {
-                if (currentFile - 2 >= 1) goToPage(currentFile - 2);
-                else if (currentFile > 1) goToPage(currentFile - 1);
-            }
+            let step = window.innerWidth <= 768 ? 1 : 2;
+            if (currentFile - step >= 1) currentFile -= step;
+            else if (currentFile > 1) currentFile--;
+            else return;
+            updatePages();
         }
-        
-        // ================== Storage Management (unchanged) ==================
+
+        // ================== Storage Management ==================
         function updateStorageVisibility() {
             const storageToggle = document.getElementById('storageToggle');
             if (isDownloaded) {
@@ -1831,7 +1662,7 @@
                 }
                 setDownloadedUI();
                 await showDialogAlert(translations[currentLang].downloadSuccess, translations[currentLang].confirmDownloadTitle);
-                refreshDisplay();
+                updatePages();
             } catch (err) {
                 progress.textContent = '❌ ' + translations[currentLang].downloadError;
                 await showDialogAlert(translations[currentLang].downloadError, translations[currentLang].confirmDownloadTitle);
@@ -1873,7 +1704,7 @@
                 resetDownloadedUI();
                 prog.style.display = 'none';
                 await showDialogAlert(translations[currentLang].deleteSuccess, translations[currentLang].confirmDeleteTitle);
-                refreshDisplay();
+                updatePages();
             } catch {
                 prog.style.display = 'none';
                 await showDialogAlert(translations[currentLang].deleteError, translations[currentLang].confirmDeleteTitle);
@@ -1881,15 +1712,45 @@
         }
 
         // ================== Overlay Management ==================
-        function openOverlay(id) { document.getElementById(id).classList.add('active'); }
-        function closeOverlay(id) { document.getElementById(id).classList.remove('active'); }
-        function closeActiveOverlay() { /* same as original */ return false; }
+        function openOverlay(id) { 
+            document.getElementById(id).classList.add('active'); 
+        }
+        function closeOverlay(id) { 
+            document.getElementById(id).classList.remove('active'); 
+        }
+
+        function closeActiveOverlay() {
+            const overlays = ['juzOverlay', 'settingsOverlay', 'downloadOverlay'];
+            for (let id of overlays) {
+                if (document.getElementById(id).classList.contains('active')) {
+                    closeOverlay(id);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         function toggleFullScreen() {
             if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
             else if (document.exitFullscreen) document.exitFullscreen();
         }
 
-        // ================== Juz & Surah Grids (unchanged) ==================
+        // Back button
+        history.pushState(null, null, location.href);
+        window.addEventListener('popstate', function() {
+            if (closeActiveOverlay()) {
+                history.pushState(null, null, location.href);
+                return;
+            }
+            const splash = document.getElementById('splashOverlay');
+            if (!splash.classList.contains('active')) {
+                splash.classList.add('active');
+                history.pushState(null, null, location.href);
+                return;
+            }
+        });
+
+        // ================== Juz Grid (with ordinal text) ==================
         function buildJuzGrid() {
             const grid = document.getElementById('juzGrid');
             grid.innerHTML = '';
@@ -1903,15 +1764,22 @@
                 let ordinal;
                 if (currentLang === 'fa') {
                     ordinal = juzOrdinalsFa[i-1];
-                    div.innerHTML = `<div class="juz-num">${formatNumber(i)}</div><div class="juz-name">جزء ${ordinal}</div>`;
+                    div.innerHTML = `
+                        <div class="juz-num">${formatNumber(i)}</div>
+                        <div class="juz-name">جزء ${ordinal}</div>
+                    `;
                 } else {
                     ordinal = juzOrdinalsAr[i-1];
-                    div.innerHTML = `<div class="juz-num">${formatNumber(i)}</div><div class="juz-name">الجزء ${ordinal}</div>`;
+                    div.innerHTML = `
+                        <div class="juz-num">${formatNumber(i)}</div>
+                        <div class="juz-name">الجزء ${ordinal}</div>
+                    `;
                 }
                 div.onclick = () => {
                     let target = startFile;
                     if (window.innerWidth > 768 && target % 2 === 0) target--;
-                    goToPage(target);
+                    currentFile = target;
+                    updatePages();
                     closeOverlay('juzOverlay');
                 };
                 div.classList.add('fade-in');
@@ -1920,11 +1788,18 @@
             }
         }
 
-        const surahPages = [1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,305,312,322,331,342,350,359,366,376,385,396,404,411,415,418,428,434,440,445,452,458,467,477,483,489,495,498,502,506,511,515,518,520,523,526,528,531,534,537,542,545,549,551,553,554,556,558,560,562,564,567,569,571,573,576,578,580,582,584,586,587,589,590,591,592,594,595,596,597,597,598,600,600,601,602,602,603,603,604,604,605,605,606,606,607,607,607,608,608,608,609,609,609,610,610,610];
+        const surahPages = [
+            1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,305,312,322,331,342,350,359,366,376,385,396,404,411,415,418,428,434,440,445,452,458,467,477,483,489,495,498,502,506,511,515,518,520,523,526,528,531,534,537,542,545,549,551,553,554,556,558,560,562,564,567,569,571,573,576,578,580,582,584,586,587,589,590,591,592,594,595,596,597,597,598,600,600,601,602,602,603,603,604,604,605,605,606,606,607,607,607,608,608,608,609,609,609,610,610,610
+        ];
         const surahFiles = surahPages.map(p => p + 2);
-        const surahNamesAr = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
-        const surahNamesFa = ["فاتحه","بقره","آل‌عمران","نساء","مائده","انعام","اعراف","انفال","توبه","یونس","هود","یوسف","رعد","ابراهیم","حجر","نحل","اسراء","کهف","مریم","طه","انبیاء","حج","مؤمنون","نور","فرقان","شعراء","نمل","قصص","عنکبوت","روم","لقمان","سجده","احزاب","سبأ","فاطر","یس","صافات","ص","زمر","غافر","فصلت","شوری","زخرف","دخان","جاثیه","احقاف","محمد","فتح","حجرات","ق","ذاریات","طور","نجم","قمر","الرحمن","واقعه","حدید","مجادله","حشر","ممتحنه","صف","جمعه","منافقون","تغابن","طلاق","تحریم","ملک","قلم","حاقه","معارج","نوح","جن","مزمل","مدثر","قیامت","انسان","مرسلات","نبأ","نازعات","عبس","تکویر","انفطار","مطففین","انشقاق","بروج","طارق","اعلی","غاشیه","فجر","بلد","شمس","لیل","ضحی","شرح","تین","علق","قدر","بینه","زلزله","عادیات","قارعه","تکاثر","عصر","همزه","فیل","قریش","ماعون","کوثر","کافرون","نصر","مسد","اخلاص","فلق","ناس"];
+        const surahNamesAr = [
+            "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"
+        ];
+        const surahNamesFa = [
+            "فاتحه","بقره","آل‌عمران","نساء","مائده","انعام","اعراف","انفال","توبه","یونس","هود","یوسف","رعد","ابراهیم","حجر","نحل","اسراء","کهف","مریم","طه","انبیاء","حج","مؤمنون","نور","فرقان","شعراء","نمل","قصص","عنکبوت","روم","لقمان","سجده","احزاب","سبأ","فاطر","یس","صافات","ص","زمر","غافر","فصلت","شوری","زخرف","دخان","جاثیه","احقاف","محمد","فتح","حجرات","ق","ذاریات","طور","نجم","قمر","الرحمن","واقعه","حدید","مجادله","حشر","ممتحنه","صف","جمعه","منافقون","تغابن","طلاق","تحریم","ملک","قلم","حاقه","معارج","نوح","جن","مزمل","مدثر","قیامت","انسان","مرسلات","نبأ","نازعات","عبس","تکویر","انفطار","مطففین","انشقاق","بروج","طارق","اعلی","غاشیه","فجر","بلد","شمس","لیل","ضحی","شرح","تین","علق","قدر","بینه","زلزله","عادیات","قارعه","تکاثر","عصر","همزه","فیل","قریش","ماعون","کوثر","کافرون","نصر","مسد","اخلاص","فلق","ناس"
+        ];
 
+        // ================== Surah Grid with numbered circles ==================
         function rebuildSurahGrid() {
             const grid = document.getElementById('surahGrid');
             grid.innerHTML = '';
@@ -1934,11 +1809,15 @@
                 let name = (currentLang === 'fa') ? surahNamesFa[i] : surahNamesAr[i];
                 const div = document.createElement('div');
                 div.className = 'surah-item';
-                div.innerHTML = `<div class="surah-num">${formatNumber(surahNumber)}</div><div class="surah-name">${name}</div>`;
+                div.innerHTML = `
+                    <div class="surah-num">${formatNumber(surahNumber)}</div>
+                    <div class="surah-name">${name}</div>
+                `;
                 div.onclick = () => {
                     let target = file;
                     if (window.innerWidth > 768 && target % 2 === 0) target--;
-                    goToPage(target);
+                    currentFile = target;
+                    updatePages();
                     closeOverlay('juzOverlay');
                 };
                 div.classList.add('fade-in');
@@ -2012,17 +1891,66 @@
             el.querySelector('.overlay-backdrop').addEventListener('click', () => closeOverlay(id));
         });
 
-        // Handle resize
-        window.addEventListener('resize', () => {
-            refreshDisplay();
-        });
-        window.addEventListener('orientationchange', () => setTimeout(refreshDisplay, 50));
+        // ================== Touch Events ==================
+        const swipeArea = document.getElementById('swipeArea');
+        let touchstartX = 0, touchstartY = 0, touchStartTime = 0;
+        swipeArea.addEventListener('touchstart', e => {
+            if (e.touches.length >= 2) {
+                initialPinchDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                isPanning = false;
+            } else if (e.touches.length === 1) {
+                touchstartX = e.touches[0].clientX; touchstartY = e.touches[0].clientY;
+                touchStartTime = Date.now(); hasMoved = false;
+                if (currentScale > 1) isPanning = true;
+            }
+        }, { passive: false });
+        swipeArea.addEventListener('touchmove', e => {
+            e.preventDefault(); hasMoved = true;
+            if (e.touches.length >= 2 && initialPinchDistance) {
+                let dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                currentScale = Math.min(Math.max(1, currentScale * (dist / initialPinchDistance)), 4);
+                initialPinchDistance = dist;
+                applyTransform(false);
+            } else if (e.touches.length === 1 && isPanning && currentScale > 1) {
+                translateX = lastTranslateX + (e.touches[0].clientX - touchstartX);
+                translateY = lastTranslateY + (e.touches[0].clientY - touchstartY);
+                applyTransform(false);
+            }
+        }, { passive: false });
+        swipeArea.addEventListener('touchend', e => {
+            if (e.touches.length > 0) {
+                initialPinchDistance = null;
+                if (e.touches.length === 1 && currentScale > 1) {
+                    touchstartX = e.touches[0].clientX; touchstartY = e.touches[0].clientY;
+                    lastTranslateX = translateX; lastTranslateY = translateY; isPanning = true;
+                }
+                return;
+            }
+            initialPinchDistance = null;
+            if (isPanning) { lastTranslateX = translateX; lastTranslateY = translateY; isPanning = false; }
+            if (!hasMoved) {
+                let now = Date.now();
+                if (now - lastTapTime < 300 && now - lastTapTime > 0) { resetZoom(); lastTapTime = 0; return; }
+                lastTapTime = now;
+            } else lastTapTime = 0;
 
-        // Keyboard navigation
+            if (currentScale <= 1.05 && e.changedTouches.length === 1 && hasMoved) {
+                let diffX = Math.abs(e.changedTouches[0].clientX - touchstartX);
+                let diffY = Math.abs(e.changedTouches[0].clientY - touchstartY);
+                let timeDiff = Date.now() - touchStartTime;
+                if (diffX > 80 && diffX > diffY * 2 && timeDiff < 600) {
+                    if (e.changedTouches[0].clientX > touchstartX) nextPage(); else prevPage();
+                }
+            }
+        }, { passive: false });
+
         document.addEventListener('keydown', e => {
             if (e.key === 'ArrowLeft') { e.preventDefault(); nextPage(); }
             if (e.key === 'ArrowRight') { e.preventDefault(); prevPage(); }
         });
+
+        window.addEventListener('resize', updatePages);
+        window.addEventListener('orientationchange', () => setTimeout(updatePages, 50));
 
         // ================== Initialization ==================
         (function init() {
@@ -2032,11 +1960,14 @@
             rebuildSurahGrid();
             let saved = localStorage.getItem('lastQuranFile');
             if (saved && !isNaN(parseInt(saved))) currentFile = parseInt(saved);
-            refreshDisplay();
+            updatePages();
             caches.open('quran-cache-v1').then(cache => {
                 cache.match('images/Quran003.jpg').then(res => {
-                    if (res) setDownloadedUI();
-                    else updateStorageVisibility();
+                    if (res) {
+                        setDownloadedUI();
+                    } else {
+                        updateStorageVisibility();
+                    }
                 });
             });
         })();
