@@ -1,137 +1,85 @@
-const APP_CACHE_NAME = 'quran-app-v5';
-const IMAGE_CACHE_NAME = 'quran-cache-v1';
+const APP_CACHE_NAME = 'quran-app-v6';
+const IMAGE_CACHE_NAME = 'quran-cache-hq-v1'; // باید با index.html یکی باشد
+const QURAN_IMAGE_RE = /Quran\d{3}\.jpg/;
+const FONT_CSS = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Vazirmatn:wght@300;400;500;600;700&display=swap';
 
 const urlsToCache = [
-  './',
-  './index.html',
-  './manifest.json',
-  'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap',
-  'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap',
-  'https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css',
-  'https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.woff2',
-  'https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.woff',
-  'https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.ttf'
+  './', './index.html', './manifest.json',
+  './icons/maskable_icon_x48.png', './icons/maskable_icon_x96.png',
+  './icons/maskable_icon_x192.png', './icons/maskable_icon_x512.png',
+  FONT_CSS
 ];
 
-// الگوی تشخیص تصاویر قرآن (هم cache key و هم URL گیت‌هاب)
-const QURAN_IMAGE_RE = /Quran\d{3}\.jpg/;
+const isFontUrl = u => /fonts\.googleapis|fonts\.gstatic/.test(u);
 
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(APP_CACHE_NAME).then(cache => {
-      return Promise.allSettled(
-        urlsToCache.map(url =>
-          cache.add(url).catch(err => console.log('Failed to cache', url, err))
-        )
-      );
-    })
+    caches.open(APP_CACHE_NAME).then(cache =>
+      Promise.allSettled(urlsToCache.map(u => cache.add(u)))
+    )
   );
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName.startsWith('quran-app-') && cacheName !== APP_CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-          // پاک‌سازی کش‌های قدیمی تصاویر (اصلاح #11)
-          if (cacheName.startsWith('quran-image-') && cacheName !== IMAGE_CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-          if (cacheName.startsWith('quran-cache-') && cacheName !== IMAGE_CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    }).then(() => self.clients.claim())
+    caches.keys().then(names => Promise.all(names.map(n => {
+      const old = (n.startsWith('quran-app-') && n !== APP_CACHE_NAME) ||
+                  (n.startsWith('quran-cache-') && n !== IMAGE_CACHE_NAME) ||
+                  n.startsWith('quran-image-');
+      return old ? caches.delete(n) : null;
+    }))).then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', event => {
-  const url = event.request.url;
+  const req = event.request;
+  if (req.method !== 'GET') return;
+  const url = req.url;
 
-  // تصاویر قرآن: Cache First (اصلاح #2 - شامل URL گیت‌هاب هم می‌شود)
-  if (url.includes('images/Quran') || QURAN_IMAGE_RE.test(url)) {
+  // تصاویر قرآن: فقط از کش اصلی (کلید images/QuranXXX.jpg) بخوان؛ ذخیره‌سازی را خود صفحه انجام می‌دهد
+  const img = url.match(QURAN_IMAGE_RE);
+  if (img) {
     event.respondWith(
-      caches.match(event.request).then(cachedResponse => {
-        if (cachedResponse) return cachedResponse;
+      caches.open(IMAGE_CACHE_NAME)
+        .then(c => c.match('images/' + img[0]))
+        .then(hit => hit || fetch(req))
+        .catch(() => new Response('', { status: 503, statusText: 'Offline' }))
+    );
+    return;
+  }
 
-        return fetch(event.request).then(networkResponse => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseToCache = networkResponse.clone();
-            caches.open(IMAGE_CACHE_NAME).then(cache => {
-              cache.put(event.request, responseToCache);
-            });
+  // فونت‌ها: کش‌اول + به‌روزرسانی در پس‌زمینه
+  if (isFontUrl(url)) {
+    event.respondWith(
+      caches.match(req).then(cached => {
+        const net = fetch(req).then(res => {
+          if (res && res.status === 200) {
+            const copy = res.clone();
+            caches.open(APP_CACHE_NAME).then(c => c.put(req, copy));
           }
-          return networkResponse;
-        }).catch(() => {
-          // اصلاح #5: پاسخ معتبر برگردان، نه undefined
-          return new Response('', { status: 503, statusText: 'Offline' });
+          return res;
         });
+        if (cached) { net.catch(() => {}); return cached; }
+        return net.catch(() => new Response('', { status: 503, statusText: 'Offline' }));
       })
     );
     return;
   }
 
-  // فونت‌ها و CSS: Cache First + پس‌زمینه آپدیت
-  if (
-    url.includes('Vazir') || url.includes('vazirmatn') ||
-    url.includes('fontcdn') || url.includes('fonts.googleapis') ||
-    url.includes('fonts.gstatic') || url.includes('Amiri')
-  ) {
-    event.respondWith(
-      caches.match(event.request).then(cachedResponse => {
-        if (cachedResponse) {
-          fetch(event.request).then(networkResponse => {
-            if (networkResponse && networkResponse.status === 200) {
-              caches.open(APP_CACHE_NAME).then(cache => {
-                cache.put(event.request, networkResponse.clone());
-              });
-            }
-          }).catch(() => {});
-          return cachedResponse;
-        }
-        return fetch(event.request).then(networkResponse => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseToCache = networkResponse.clone();
-            caches.open(APP_CACHE_NAME).then(cache => {
-              cache.put(event.request, responseToCache);
-            });
-          }
-          return networkResponse;
-        });
-      })
-    );
-    return;
-  }
-
-  // سایر (HTML, JS, manifest): Stale-While-Revalidate
+  // بقیه (HTML, manifest, آیکون‌ها): Stale-While-Revalidate
   event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      if (cachedResponse) {
-        fetch(event.request).then(networkResponse => {
-          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-            caches.open(APP_CACHE_NAME).then(cache => {
-              cache.put(event.request, networkResponse.clone());
-            });
-          }
-        }).catch(() => {});
-        return cachedResponse;
-      }
-      return fetch(event.request).then(networkResponse => {
-        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-          const responseToCache = networkResponse.clone();
-          caches.open(APP_CACHE_NAME).then(cache => {
-            cache.put(event.request, responseToCache);
-          });
+    caches.match(req, { ignoreSearch: true }).then(cached => {
+      const net = fetch(req).then(res => {
+        if (res && res.status === 200 && res.type === 'basic') {
+          const copy = res.clone();
+          caches.open(APP_CACHE_NAME).then(c => c.put(req, copy));
         }
-        return networkResponse;
-      }).catch(async () => {
-        // اصلاح #5: در صورت آفلاین بودن، همیشه پاسخ معتبر برگردان
-        if (event.request.mode === 'navigate') {
+        return res;
+      });
+      if (cached) { net.catch(() => {}); return cached; }
+      return net.catch(async () => {
+        if (req.mode === 'navigate') {
           const fallback = await caches.match('./index.html');
           if (fallback) return fallback;
         }
