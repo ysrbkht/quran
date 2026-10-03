@@ -12,7 +12,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./icons/maskable_icon_x192.png">
     <link rel="apple-touch-icon" href="./icons/maskable_icon_x192.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" id="apple-status-meta">
     <meta name="apple-mobile-web-app-title" content="القرآن">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -163,7 +163,6 @@
             animation: gradientBG 15s ease infinite;
         }
 
-        /* اصلاح #10: night-mode روی تم مدرن، ملایم‌تر (بدون تیرگی مضاعف) */
         body.theme-modern.night-mode {
             --bg-primary: #08081a;
             --bg-secondary: #1a1533;
@@ -198,7 +197,6 @@
             animation: floatParticles 20s ease-in-out infinite;
         }
 
-        /* اصلاح #25: احترام به prefers-reduced-motion */
         @media (prefers-reduced-motion: reduce) {
             body.theme-modern,
             body.theme-modern.night-mode {
@@ -1050,7 +1048,7 @@
         </div>
     </div>
 
-    <!-- floating buttons (اصلاح #13: aria-label) -->
+    <!-- floating buttons -->
     <button class="float-btn btn-menu" id="btnMenu" title="فهرست اجزاء و سوره‌ها" aria-label="فهرست اجزاء و سوره‌ها"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
     <button class="float-btn btn-settings" id="btnSettings" title="تنظیمات" aria-label="تنظیمات"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94 0 .31.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
     <button class="float-btn btn-download" id="btnDownload" title="دانلود آفلاین" aria-label="دانلود آفلاین"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></button>
@@ -1062,8 +1060,8 @@
     <div class="main-content" id="swipeArea">
         <button class="nav-btn nav-right" id="navRight" title="صفحه قبل" aria-label="صفحه قبل"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg></button>
         <div class="quran-container" id="quranContainer">
-            <div class="page-wrapper" id="rightWrapper"><img id="rightPage" class="page" alt="صفحه قرآن" draggable="false" loading="lazy" decoding="async"></div>
-            <div class="page-wrapper" id="leftWrapper"><img id="leftPage" class="page" alt="صفحه قرآن" draggable="false" loading="lazy" decoding="async"></div>
+            <div class="page-wrapper" id="rightWrapper"><img id="rightPage" class="page" alt="صفحه قرآن" draggable="false" decoding="async"></div>
+            <div class="page-wrapper" id="leftWrapper"><img id="leftPage" class="page" alt="صفحه قرآن" draggable="false" decoding="async"></div>
         </div>
         <button class="nav-btn nav-left" id="navLeft" title="صفحه بعد" aria-label="صفحه بعد"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
     </div>
@@ -1084,7 +1082,6 @@
         let deferredPrompt = null;
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-        // اصلاح #26: SW با scope مناسب
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js', { scope: './' })
@@ -1243,7 +1240,6 @@
             "الحادي والعشرون", "الثاني والعشرون", "الثالث والعشرون", "الرابع والعشرون", "الخامس والعشرون", "السادس والعشرون", "السابع والعشرون", "الثامن والعشرون", "التاسع والعشرون", "الثلاثون"
         ];
 
-        // اصلاح #24: اعتبارسنجی آرایه‌ها
         function validateData() {
             if (surahPages.length !== 114) console.warn('surahPages must have 114 items, has', surahPages.length);
             if (surahNamesAr.length !== 114) console.warn('surahNamesAr must have 114 items, has', surahNamesAr.length);
@@ -1366,7 +1362,7 @@
             if (currentThemeMode === 'night') document.body.classList.add('night-mode');
 
             const meta = document.getElementById('theme-color-meta');
-            const appleStatus = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+            const appleStatus = document.getElementById('apple-status-meta');
 
             let color = '#0f0c29';
             if (currentThemeStyle === 'abi') color = currentThemeMode === 'night' ? '#0b1424' : '#f0f7ff';
@@ -1374,8 +1370,6 @@
             else if (currentThemeStyle === 'modern') color = currentThemeMode === 'night' ? '#08081a' : '#0f0c29';
 
             if (meta) meta.setAttribute('content', color);
-
-            // اصلاح #21: به‌روزرسانی وضعیت نوار iOS
             if (appleStatus) {
                 const isDark = currentThemeMode === 'night' || currentThemeStyle === 'modern';
                 appleStatus.setAttribute('content', isDark ? 'black-translucent' : 'default');
@@ -1411,7 +1405,7 @@
             nightBtn.classList.toggle('active', currentThemeMode === 'night');
         }
 
-        // ================== Page Management (اصلاح #2) ==================
+        // ================== Page Management ==================
         async function loadPageImage(imgId, fileNumber, side) {
             const img = document.getElementById(imgId);
             if (!img) return;
@@ -1427,6 +1421,7 @@
             const altPrefix = currentLang === 'fa' ? 'صفحه ' : 'صفحة ';
             img.alt = altPrefix + formatNumber(fileNumber);
 
+            // مرحله ۱: از کش بخوان (مسیر نسبی - هماهنگ با دانلود)
             try {
                 const cache = await caches.open(IMAGE_CACHE_NAME);
                 const cached = await cache.match(cacheKey);
@@ -1434,6 +1429,7 @@
                     const blob = await cached.blob();
                     const objUrl = URL.createObjectURL(blob);
                     objectUrls[side] = objUrl;
+                    img.onerror = null;
                     img.src = objUrl;
                     return;
                 }
@@ -1441,11 +1437,16 @@
                 console.log('Cache read error', e);
             }
 
-            // Fallback: مستقیم از گیت‌هاب (SW آن را کش می‌کند)
-            img.src = GITHUB_BASE_SD + fileName;
+            // مرحله ۲: مسیر نسبی (اصل - SW آن را پاسخ می‌دهد یا 503 برمی‌گرداند)
+            // اگر شکست خورد، مرحله ۳: fallback به گیت‌هاب
+            img.onerror = () => {
+                img.onerror = null;
+                console.log('Relative path failed, trying GitHub:', fileName);
+                img.src = GITHUB_BASE_SD + fileName;
+            };
+            img.src = cacheKey;
         }
 
-        // اصلاح #16: پیش‌بارگذاری صفحات مجاور
         function preloadAdjacent(currentFile) {
             const isMobile = window.innerWidth <= 768;
             const step = isMobile ? 1 : 2;
@@ -1458,9 +1459,16 @@
             targets.forEach(f => {
                 if (f >= 3 && f <= totalFiles) {
                     const fileName = 'Quran' + String(f).padStart(3, '0') + '.jpg';
-                    const pre = new Image();
-                    pre.decoding = 'async';
-                    pre.src = GITHUB_BASE_SD + fileName;
+                    // فقط اگر قبلاً در کش هست، preload کن
+                    caches.open(IMAGE_CACHE_NAME).then(cache => {
+                        cache.match('images/' + fileName).then(cached => {
+                            if (cached) {
+                                const pre = new Image();
+                                pre.decoding = 'async';
+                                pre.src = 'images/' + fileName;
+                            }
+                        });
+                    }).catch(() => {});
                 }
             });
         }
@@ -1492,11 +1500,8 @@
             localStorage.setItem('lastQuranFile', currentFile.toString());
             localStorage.setItem('lastReadTimestamp', Date.now().toString());
 
-            // اصلاح #7: فقط hash را به‌روزرسانی کن
             if (window.location.protocol !== 'file:') {
-                try {
-                    history.replaceState(history.state, null, '#' + currentFile);
-                } catch (e) {}
+                try { history.replaceState(history.state, null, '#' + currentFile); } catch (e) {}
             }
 
             preloadAdjacent(currentFile);
@@ -1566,7 +1571,6 @@
             }
         }
 
-        // اصلاح #3: شمارش واقعی فایل‌های دانلودشده
         async function getDownloadedCount() {
             try {
                 const cache = await caches.open(IMAGE_CACHE_NAME);
@@ -1590,13 +1594,39 @@
 
         async function checkDownloadStatus() {
             const count = await getDownloadedCount();
-            const total = totalFiles - 2; // از 3 تا 612
+            const total = totalFiles - 2;
             if (count >= total - 5) return { status: 'complete', count };
             if (count > 0) return { status: 'partial', count };
             return { status: 'none', count: 0 };
         }
 
-        // اصلاح #20: ادامه دانلود از همان‌جا
+        // ================== Download ==================
+        // اول مسیر نسبی (که SW هم پاسخ می‌دهد)، بعد گیت‌هاب
+        async function fetchImageToCache(fileName, cacheKey, cache) {
+            const relativeUrl = 'images/' + fileName;
+            const githubUrl = GITHUB_BASE_SD + fileName;
+
+            // تلاش ۱: مسیر نسبی
+            try {
+                const resp = await fetch(relativeUrl, { cache: 'no-store' });
+                if (resp.ok && resp.status === 200) {
+                    await cache.put(cacheKey, resp.clone());
+                    return true;
+                }
+            } catch (e) { /* ادامه */ }
+
+            // تلاش ۲: گیت‌هاب
+            try {
+                const resp = await fetch(githubUrl, { cache: 'no-store', mode: 'cors' });
+                if (resp.ok && resp.status === 200) {
+                    await cache.put(cacheKey, resp.clone());
+                    return true;
+                }
+            } catch (e) { /* ادامه */ }
+
+            return false;
+        }
+
         async function startDownload(quality) {
             closeOverlay('downloadOverlay');
 
@@ -1627,7 +1657,6 @@
             progress.style.display = 'block';
             progress.textContent = translations[currentLang].downloading;
 
-            // اصلاح #4: شمارنده‌ی دقیق
             let downloaded = existingCount;
             let failed = 0;
             const total = totalFiles - 2;
@@ -1642,7 +1671,7 @@
 
             try {
                 const cache = await caches.open(IMAGE_CACHE_NAME);
-                const batch = 10;
+                const batch = 6;
 
                 for (let i = 3; i <= totalFiles; i += batch) {
                     const promises = [];
@@ -1652,25 +1681,18 @@
 
                         const fileName = 'Quran' + String(fileNum).padStart(3, '0') + '.jpg';
                         const cacheKey = 'images/' + fileName;
-                        const fetchUrl = quality === 'hq' ? GITHUB_BASE_HQ + fileName : GITHUB_BASE_SD + fileName;
 
                         promises.push(
-                            fetch(fetchUrl, { cache: 'reload' })
-                                .then(resp => {
-                                    if (resp.ok) {
-                                        return cache.put(cacheKey, resp.clone()).then(() => { downloaded++; });
-                                    } else {
-                                        failed++;
-                                    }
-                                })
-                                .catch(() => { failed++; })
+                            fetchImageToCache(fileName, cacheKey, cache).then(ok => {
+                                if (ok) downloaded++;
+                                else failed++;
+                            })
                         );
                     }
                     if (promises.length) await Promise.all(promises);
                     updateProgress();
                 }
 
-                // اگر بیش از ۲۰٪ شکست خورد، خطا
                 if (failed > total * 0.2) {
                     throw new Error('Too many download failures');
                 }
@@ -1685,11 +1707,10 @@
                 console.error('Download error:', err);
                 progress.textContent = '❌ ' + translations[currentLang].downloadError;
                 await showDialogAlert(translations[currentLang].downloadError, translations[currentLang].confirmDownloadTitle);
-                dlBtn.style.pointerEvents = 'auto';
-                // اگر بخشی دانلود شده بود، به‌عنوان partial در نظر بگیر
                 if (downloaded > 0) {
                     downloadStatus = 'partial';
                     updateStorageVisibility();
+                    updateDownloadStatusUI();
                 }
             } finally {
                 setTimeout(() => {
@@ -1735,8 +1756,6 @@
                     .replace('{count}', formatNumber(count))
                     .replace('{total}', formatNumber(total));
                 statusEl.classList.add('visible');
-            } else if (downloadStatus === 'complete') {
-                statusEl.classList.remove('visible');
             } else {
                 statusEl.classList.remove('visible');
             }
@@ -1767,7 +1786,6 @@
             const el = document.getElementById(id);
             el.classList.add('active');
             el.setAttribute('aria-hidden', 'false');
-            // اصلاح #20: به‌روزرسانی وضعیت دانلود هنگام باز شدن overlay دانلود
             if (id === 'downloadOverlay') updateDownloadStatusUI();
         }
         function closeOverlay(id) {
@@ -1795,22 +1813,22 @@
             }
         }
 
-        // اصلاح #7: ترفند بازگشت، تمیزتر
+        // Back button (بدون دستکاری URL - فقط state)
         (function setupBackButton() {
             if (!history.state || !history.state.quranApp) {
-                history.replaceState({ quranApp: true }, '', location.pathname + location.search);
+                history.replaceState({ quranApp: true }, '');
             }
-            history.pushState({ quranApp: true, level: 1 }, '', location.pathname + location.search);
+            history.pushState({ quranApp: true, level: 1 }, '');
 
             window.addEventListener('popstate', function() {
                 if (closeActiveOverlay()) {
-                    history.pushState({ quranApp: true, level: 1 }, '', location.pathname + location.search);
+                    history.pushState({ quranApp: true, level: 1 }, '');
                     return;
                 }
                 const splash = document.getElementById('splashOverlay');
                 if (!splash.classList.contains('active')) {
                     splash.classList.add('active');
-                    history.pushState({ quranApp: true, level: 1 }, '', location.pathname + location.search);
+                    history.pushState({ quranApp: true, level: 1 }, '');
                     return;
                 }
             });
@@ -1834,16 +1852,10 @@
                 let ordinal;
                 if (currentLang === 'fa') {
                     ordinal = juzOrdinalsFa[i - 1];
-                    div.innerHTML = `
-                        <div class="juz-num">${formatNumber(i)}</div>
-                        <div class="juz-name">جزء ${ordinal}</div>
-                    `;
+                    div.innerHTML = `<div class="juz-num">${formatNumber(i)}</div><div class="juz-name">جزء ${ordinal}</div>`;
                 } else {
                     ordinal = juzOrdinalsAr[i - 1];
-                    div.innerHTML = `
-                        <div class="juz-num">${formatNumber(i)}</div>
-                        <div class="juz-name">الجزء ${ordinal}</div>
-                    `;
+                    div.innerHTML = `<div class="juz-num">${formatNumber(i)}</div><div class="juz-name">الجزء ${ordinal}</div>`;
                 }
                 const handler = () => {
                     let target = startFile;
@@ -1883,10 +1895,7 @@
                 div.className = 'surah-item';
                 div.setAttribute('role', 'button');
                 div.setAttribute('tabindex', '0');
-                div.innerHTML = `
-                    <div class="surah-num">${formatNumber(surahNumber)}</div>
-                    <div class="surah-name">${name}</div>
-                `;
+                div.innerHTML = `<div class="surah-num">${formatNumber(surahNumber)}</div><div class="surah-name">${name}</div>`;
                 const handler = () => {
                     let target = file;
                     if (window.innerWidth > 768 && target % 2 === 0) target--;
@@ -2043,7 +2052,7 @@
                 const diffY = Math.abs(e.changedTouches[0].clientY - touchstartY);
                 const timeDiff = Date.now() - touchStartTime;
                 if (diffX > 80 && diffX > diffY * 2 && timeDiff < 600) {
-                    // توجه: جهت سوایپ طبق درخواست کاربر دست‌نخورده باقی ماند
+                    // جهت سوایپ: طبق درخواست کاربر دست‌نخورده باقی ماند
                     if (e.changedTouches[0].clientX > touchstartX) nextPage();
                     else prevPage();
                 }
@@ -2056,7 +2065,6 @@
             if (e.key === 'Escape') closeActiveOverlay();
         });
 
-        // اصلاح #8: debounce روی resize
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
@@ -2076,14 +2084,12 @@
             if (saved && !isNaN(parseInt(saved))) {
                 currentFile = parseInt(saved);
             } else {
-                // تلاش برای خواندن از hash
                 const m = location.hash.match(/#(\d+)/);
                 if (m) currentFile = parseInt(m[1]);
             }
 
             updatePages();
 
-            // اصلاح #3: تشخیص وضعیت دانلود
             const status = await checkDownloadStatus();
             downloadStatus = status.status;
             if (status.status === 'complete') {
